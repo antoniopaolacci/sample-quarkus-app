@@ -1,0 +1,124 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>Employee REST service</title>
+    <link rel="stylesheet" href="https://unpkg.com/wingcss"/>
+    <!-- Load AngularJS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.0/angular.min.js"></script>
+    <script type="text/javascript">
+
+      var app = angular.module("EmployeeManagement", []);
+
+      //Controller Part
+      app.controller("EmployeeManagementController", function ($scope, $http) {
+
+        //Initialize page with default data which is blank in this example
+        $scope.employees = [];
+
+        $scope.form = {                
+          name: "",
+          age: "",
+          position: "",
+          organization: "",
+          department: ""
+        };
+
+        //Now load the data from server
+        _refreshPageData();
+
+        //HTTP POST methods for add 
+        $scope.add = function () {
+
+          var data = { "name": $scope.form.name, "age": $scope.form.age, "position": $scope.form.position, "organizationId": $scope.form.organization, "departmentId": $scope.form.department };
+
+          $http({
+            method: "POST",
+            url: '/employees',
+            data: angular.toJson(data),
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          }).then(_success, _error);
+        };
+
+        /* Private Methods */
+        //HTTP GET - get all collection
+        function _refreshPageData() {
+          $http({
+            method: 'GET',
+            url: '/employees'
+          }).then(function successCallback(response) {
+		        	console.log(response.data);  
+		            $scope.employees = response.data;
+          }, function errorCallback(response) {
+	            console.log(response.statusText);
+          });
+        }
+
+        function _success(response) {
+          _refreshPageData();
+          _clearForm();
+        }
+
+        function _error(response) {
+          alert(response.data.message || response.statusText);
+        }
+
+        //Clear the form
+        function _clearForm() {
+          $scope.form.name = "";
+          $scope.form.age = "";
+          $scope.form.position = "";
+          $scope.form.organization = "";
+          $scope.form.department = "";
+        }
+        
+      });
+    </script>
+</head>
+
+<body ng-app="EmployeeManagement" ng-controller="EmployeeManagementController">
+
+<div class="container">
+    <h1>REST Service - Employee</h1>
+
+    <h3>Add a employee</h3>
+    <form ng-submit="add()">
+        <div class="row">
+            <div class="col-6"><input type="text" placeholder="Name" ng-model="form.name" size="20"/></div>
+        </div>
+        <div class="row">
+            <div class="col-6"><input type="text" placeholder="Age" ng-model="form.age" size="20"/></div>
+        </div>
+        <div class="row">
+            <div class="col-6"><input type="text" placeholder="Position" ng-model="form.position" size="20"/></div>
+        </div>
+        <div class="row">
+            <div class="col-6"><input type="text" placeholder="Organization" ng-model="form.organization" size="20"/></div>
+        </div>
+        <div class="row">
+            <div class="col-6"><input type="text" placeholder="Department" ng-model="form.department" size="20"/></div>
+        </div>
+        <input type="submit" value="Save"/>
+    </form>
+
+    <h3>Employee List</h3>
+    <div class="row">
+        <div class="col-4">Name</div>
+        <div class="col-4">Age</div>
+        <div class="col-4">Position</div>
+        <div class="col-4">Organization</div>
+        <div class="col-4">Department</div>
+    </div>
+    <div class="row" ng-repeat="emp in employees">
+        <div class="col-4">{{ emp.name }}</div>
+        <div class="col-4">{{ emp.age }}</div>
+        <div class="col-4">{{ emp.position }}</div>
+        <div class="col-4">{{ emp.organizationId }}</div>
+        <div class="col-4">{{ emp.departmentId }}</div>
+    </div>
+</div>
+
+</body>
+</html>
