@@ -1,6 +1,6 @@
 # sample-quarkus-application
 
-Prerequisites:
+##### Prerequisites
 
 - using Apache Maven >= 3.6.3
 - using Java version >= 1.8  (quarkus run complains, _Using Java versions older than 11 to build Quarkus applications is deprecated and will be disallowed in a future release!_)
@@ -8,14 +8,13 @@ Prerequisites:
 
 **Quarkus** framework It allows us to automatically generate Kubernetes resources based on the defaults and user-provided configuration. It also provides an extension for building and pushing container images, then deploying the application to the target chosen platform: minikube, docker desktop kubernetes, digital ocean, Google Kubernetes Engine GKE, etc.
 
-**Quarkus** framework is designed for building Java applications in times of microservices and serverless architectures.  If you compare it with other popular frameworks like  Spring Boot / Spring Cloud (Netflix), the first difference is native support for running on Kubernetes or Openshift container orchestration platforms. 
-
-BTW quarkus provides following benefits:
+**Quarkus** framework is designed for building Java applications in times of microservices and serverless architectures.  If you compare it with other popular frameworks like  Spring Boot / Spring Cloud (Netflix), the first difference is native support for running on Kubernetes or Openshift container orchestration platforms. BTW quarkus provides following benefits:
 
 - scaffold a project in a single command line
-
 - enable the *development mode* (hot reload)
 - example Dockerfile files for both _native_ and _jvm_ modes in `src/main/docker`
+- a landing page that is accessible on `http://localhost:8080` after starting the application, other static html/css/img resource can be placed on `meta-inf/resources `dir
+- an associated unit test 
 - and more
 
 **Bootstrap**
@@ -52,9 +51,13 @@ Access the quarkus served homepage and navigate to _employee-service_ web page t
 - http://localhost:8081/my-page.html
 - http://localhost:8081/employees
 
-The same steps are repeatable for microservices project: _department-service_ e _organization_services_
+The same steps are repeatable for microservices project: 
 
-**References:**
+- _department-service_ 
+
+- _organization_services_
+
+**References**
 
 - Quarkus Startup [https://quarkus.io/guides/getting-started](https://quarkus.io/guides/getting-started)
 
