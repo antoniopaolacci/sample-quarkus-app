@@ -1,13 +1,13 @@
 package it.sample.services.employee.controller;
 
-import java.util.UUID;
-
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
 import io.quarkus.test.junit.QuarkusTest;
+import io.restassured.http.ContentType;
+import it.sample.services.employee.domain.Employee;
 
 import org.junit.jupiter.api.Test;
-
-import static io.restassured.RestAssured.given;
-import static org.hamcrest.CoreMatchers.is;
 
 /*
  * These tests use RestAssured, but feel free to use your favorite library.
@@ -16,27 +16,56 @@ import static org.hamcrest.CoreMatchers.is;
 
 @QuarkusTest
 public class EmployeeControllerTest {
+	
+    @Test
+    public void testVersion() {
 
-    @Test
-    public void testHelloEndpoint() {
-        given()
-          .when().get("/employees")
-          .then()
-             .statusCode(200)
-             .body(is("hello"));
+    	String version = "1.1.2";
+
+    	given()
+    	.when().get("/employees/version")
+    	.then()
+    	.statusCode(200)
+    	.body(is("Microservice version=" + version));
+    	
     }
-    
-    @Test
-    public void testGreetingEndpoint() {
-        
-    	String uuid = UUID.randomUUID().toString();
-        
-        given()
-          .pathParam("id", uuid)
-          .when().get("/employees/{id}")
-          .then()
-            .statusCode(200)
-            .body(is("hello " + uuid));
-    } 
+
+	@Test
+	public void testEmployees() {
+
+		given()
+		.when().get("/employees")
+		.then()
+		.statusCode(200)
+		.assertThat().body("size()", is(2));
+		
+	}
+
+	@Test
+	public void testEmployeeById() {
+
+		String uuid = "1";
+		// Expected: {"id":1,"organizationId":1,"departmentId":1,"name":"John Smith","age":30,"position":"Developer"}
+		
+		given()
+		.pathParam("id", uuid)
+		.when().get("/employees/{id}")
+		.then()
+		.statusCode(200)
+		.assertThat()
+	    .body("name", equalTo("John Smith")); 
+	}
+
+	@Test
+	public void testAddEmployee() {
+
+		Employee emp = new Employee(1L, 1L, "Joe Fake", 34, "Consultant");
+
+		given()
+		.body(emp).contentType(ContentType.JSON)
+		.post("/employees")
+		.then()
+		.statusCode(200);
+	}
 
 }

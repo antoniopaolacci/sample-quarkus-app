@@ -2,6 +2,7 @@ package it.sample.services.employee.controller;
 
 import it.sample.services.employee.domain.Employee;
 import it.sample.services.employee.repository.EmployeeRepository;
+import it.sample.services.employee.rest.client.DepartmentRestClient;
 
 import java.util.Set;
 
@@ -10,6 +11,7 @@ import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
+import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,10 +25,18 @@ public class EmployeeController {
     @Inject
     EmployeeRepository repository;
     
+    @Inject
+    @RestClient
+    DepartmentRestClient departmentRestClient;
+    
     @GET
     public Set<Employee> findAll() {
-        LOGGER.info("Employee find all.");
-        Set<Employee> employees = repository.findAll(); 
+    	
+    	LOGGER.info("Employee find all.");
+        
+    	Set<Employee> employees = repository.findAll();  
+        employees.forEach(e -> departmentRestClient.getDepartmentById(e.getDepartmentId())); 
+        
         return employees;
     }
 
@@ -55,6 +65,14 @@ public class EmployeeController {
     public Set<Employee> findByOrganization(@PathParam("organizationId") Long organizationId) {
         LOGGER.info("Employee find: organizationId={}", organizationId);
         return repository.findByOrganization(organizationId);
+    }
+    
+    @Path("/version")
+    @GET
+    public String getVersion() {
+    	String version = "Microservice version=1.1.2";
+        LOGGER.info("Microservice version={}", version);
+        return version;
     }
 
 }//end class

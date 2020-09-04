@@ -3,12 +3,14 @@
 		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-
 	<groupId>sample-quarkus-application</groupId>
 	<artifactId>sample-quarkus-app</artifactId>
 	<packaging>pom</packaging>
 	<version>1.0</version>
-
+	<!-- One reason to use a PARENT is that you have a central place to store information about versions of artifacts, 
+		 compiler-settings etc. that should be used in all modules.
+		 Maven reads the parent POM from your local repository (or proxies like nexus) 
+		 and creates an 'effective POM' by merging the information from parent and module POM. -->
 	<properties>
 		<compiler-plugin.version>3.6.3</compiler-plugin.version>
 		<maven.compiler.parameters>true</maven.compiler.parameters>
@@ -16,11 +18,16 @@
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-	</properties>
-
-	<!-- MODULE -->
+		<quarkus-plugin.version>1.7.2.Final</quarkus-plugin.version>
+		<quarkus.version>1.7.1.Final</quarkus.version>
+		<quarkus.platform.artifact-id>quarkus-universe-bom</quarkus.platform.artifact-id>
+		<quarkus.platform.group-id>io.quarkus</quarkus.platform.group-id>
+		<quarkus.platform.version>1.7.2.Final</quarkus.platform.version>
+		<surefire-plugin.version>3.0.0-M5</surefire-plugin.version>
+	</properties>	
+	<!-- JAVA MODULE -->
 	<modules>
 		<module>employee-service</module>
+		<module>department-service</module>
 	</modules>
-
 </project>

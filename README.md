@@ -1,27 +1,60 @@
 # sample-quarkus-application
 
-**Quarkus** framework It allows us to automatically generate Kubernetes resources based on the defaults and user-provided configuration. It also provides an extension for building and pushing container images, then deploying the application to the target chosen platform: minikube, docker desktop, digital ocean, Google Kubernetes Engine GKE, etc. Quarkus framework is designed for building Java applications in times of microservices and  serverless architectures.  If you compare it with other popular frameworks like  Spring Boot / Spring Cloud (Netflix) or Micronaut, the first difference is native support for running on Kubernetes or Openshift platforms. 
+Prerequisites:
 
+- using Apache Maven >= 3.6.3
+- using Java version >= 1.8  (quarkus run complains, _Using Java versions older than 11 to build Quarkus applications is deprecated and will be disallowed in a future release!_)
+- if use eclipse IDE, install quarkus plugin from marketplace
 
-In java parent POM progect create a simple quarkus REST microservice with maven _employee-service_:
+**Quarkus** framework It allows us to automatically generate Kubernetes resources based on the defaults and user-provided configuration. It also provides an extension for building and pushing container images, then deploying the application to the target chosen platform: minikube, docker desktop kubernetes, digital ocean, Google Kubernetes Engine GKE, etc.
+
+**Quarkus** framework is designed for building Java applications in times of microservices and serverless architectures.  If you compare it with other popular frameworks like  Spring Boot / Spring Cloud (Netflix), the first difference is native support for running on Kubernetes or Openshift container orchestration platforms. 
+
+BTW quarkus provides following benefits:
+
+- scaffold a project in a single command line
+
+- enable the *development mode* (hot reload)
+- example Dockerfile files for both _native_ and _jvm_ modes in `src/main/docker`
+- and more
+
+**Bootstrap**
+
+In a java parent POM project create a simple quarkus REST microservice with maven, called it _employee-service_:
 
 `mvn io.quarkus:quarkus-maven-plugin:1.7.1.Final:create -DprojectGroupId=it.example.services -DprojectArtifactId=employee-service -DclassName="it.example.services.employee.controller.EmployeeController" -Dpath="/employees" -Dextensions="resteasy-jackson, hibernate-validator, rest-client, resteasy"`
 
 A list of dependencies that need to be used in pom.xml, should be declared in parameter `-Dextensions`
 
+For example add to our project future-use dependancies:
+
+`mvn quarkus:add-extension -Dextensions="hibernate-orm, jdbc-mysql"
+mvn quarkus:add-extension -Dextensions="metrics"`
+
+**Test**
+
+Test locally  (quarkus provide junit5, REST-assured and use Hamcrest matchers to do assertion)
+
+`mvnw test`
+
+**Run**
+
 Run locally 
 
 `mvnw compile quarkus:dev`
 
+**Consume**
+
 Consume _employee-service_ microservice access to webpage:
 
-Access the quarkus served homepage and navigate to _employee-service_ web page:
+Access the quarkus served homepage and navigate to _employee-service_ web page to test this microservices architecture github process:
 
 - http://localhost:8081/my-page.html
-
 - http://localhost:8081/employees
 
-References:
+The same steps are repeatable for microservices project: _department-service_ e _organization_services_
+
+**References:**
 
 - Quarkus Startup [https://quarkus.io/guides/getting-started](https://quarkus.io/guides/getting-started)
 

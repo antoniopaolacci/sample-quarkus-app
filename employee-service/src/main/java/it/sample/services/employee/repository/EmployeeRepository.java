@@ -43,11 +43,8 @@ public class EmployeeRepository {
         Optional<Employee> employee = employees.stream().filter(a -> a.getId().equals(id)).findFirst();
 
         if (employee.isPresent())
-
             return employee.get();
-
         else
-
             return null;
 
     }
