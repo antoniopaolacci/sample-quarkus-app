@@ -48,7 +48,7 @@ Consume _employee-service_ microservice access to webpage:
 
 Access the quarkus served landing page and navigate to _employee-service_ web page to test this microservices architecture github process:
 
-- http://localhost:8081/my-page.html
+- http://localhost:8081/index.html
 - http://localhost:8081/employees
 
 The same steps are repeatable for microservices projects: 
