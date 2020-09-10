@@ -8,6 +8,8 @@ import io.restassured.http.ContentType;
 import it.sample.services.employee.domain.Employee;
 
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /*
  * These tests use RestAssured, but feel free to use your favorite library.
@@ -17,35 +19,51 @@ import org.junit.jupiter.api.Test;
 @QuarkusTest
 public class EmployeeControllerTest {
 	
+	private final Logger log = LoggerFactory.getLogger(EmployeeControllerTest.class);
+	
     @Test
     public void testVersion() {
 
-    	String version = "1.1.2";
-
+    	log.debug("----- INIT TEST testVersion() -----");
+    	
     	given()
     	.when().get("/employees/version")
     	.then()
     	.statusCode(200)
-    	.body(is("Microservice version=" + version));
+    	.body(is("1.1.0"));
     	
     }
 
 	@Test
 	public void testEmployees() {
+		
+		log.debug("----- INIT TEST employees() -----");
 
 		given()
 		.when().get("/employees")
 		.then()
 		.statusCode(200)
-		.assertThat().body("size()", is(2));
+		.assertThat().body("size()", is(3));
 		
 	}
 
 	@Test
 	public void testEmployeeById() {
+		
+		log.debug("----- INIT TEST testEmployeeById() -----");
 
 		String uuid = "1";
-		// Expected: {"id":1,"organizationId":1,"departmentId":1,"name":"John Smith","age":30,"position":"Developer"}
+		/*
+		 *  {
+		 *	  "id": 1,
+		 *	  "organizationId": 1,
+		 *	  "departmentId": 1,
+		 *	  "name": "John Smith",
+		 *	  "age": 30,
+		 *	  "position": "Developer"
+		 *	}
+		 *
+		 */
 		
 		given()
 		.pathParam("id", uuid)
@@ -59,6 +77,8 @@ public class EmployeeControllerTest {
 	@Test
 	public void testAddEmployee() {
 
+		log.debug("----- INIT TEST testAddEmployee() -----");
+		
 		Employee emp = new Employee(1L, 1L, "Joe Fake", 34, "Consultant");
 
 		given()
@@ -68,4 +88,4 @@ public class EmployeeControllerTest {
 		.statusCode(200);
 	}
 
-}
+}//end class

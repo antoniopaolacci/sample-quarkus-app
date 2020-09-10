@@ -1,30 +1,27 @@
-# department-service project
+_README.md_ explains how to:
 
-This project uses Quarkus, the Supersonic Subatomic Java Framework.
+ - scaffold a project in a single command line  (bootstrapping quarkus project)
+ - enable the development mode (hot reload)
+ - import the project in your IDE (Eclipse)
+ - and more
 
-If you want to learn more about Quarkus, please visit its website: https://quarkus.io/ .
+#####  Create the application:
 
-## Running the application in dev mode
+`mvn io.quarkus:quarkus-maven-plugin:1.7.1.Final:create -DprojectGroupId=it.example.services -DprojectArtifactId=department-service -DclassName="it.example.services.department.controller.DepartmentController" -Dpath="/departments" -Dextensions="resteasy-jackson, hibernate-validator, rest-client, resteasy"`
 
-You can run your application in dev mode that enables live coding using:
-```
-./mvnw quarkus:dev
-```
+##### Import on Eclipse IDE:
 
-## Packaging and running the application
+`mvn eclipse:eclipse`
 
-The application can be packaged using `./mvnw package`.
-It produces the `department-service-1.0-SNAPSHOT-runner.jar` file in the `/target` directory.
-Be aware that it’s not an _über-jar_ as the dependencies are copied into the `target/lib` directory.
+##### Compile and run in development mode:
 
-The application is now runnable using `java -jar target/department-service-1.0-SNAPSHOT-runner.jar`.
+`mvnw compile quarkus:dev`
 
-## Creating a native executable
+##### Run test:
 
-You can create a native executable using: `./mvnw package -Pnative`.
+`mvnw test`
 
-Or, if you don't have GraalVM installed, you can run the native executable build in a container using: `./mvnw package -Pnative -Dquarkus.native.container-build=true`.
+##### Access quarkus application on:
 
-You can then execute your native executable with: `./target/department-service-1.0-SNAPSHOT-runner`
-
-If you want to learn more about building native executables, please consult https://quarkus.io/guides/building-native-image.
+- Landing page:  http://localhost:8083/index.html
+- Rest endpoint:  http://localhost:8083/departments

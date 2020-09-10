@@ -4,6 +4,45 @@
     <meta charset="utf-8"/>
     <title>Employee REST service</title>
     <link rel="stylesheet" href="https://unpkg.com/wingcss"/>
+    
+    <style>
+    	
+    	body {
+    		background: #E7E8EA;
+    	}
+    	
+		.table-bordered {
+		    border: 1px solid #dee2e6;
+		}
+		
+		.table-bordered td, .table-bordered th {
+ 			border: 1px solid #dee2e6;
+		}
+    
+   		#mySelectOrganization {
+   			width: 20%;
+   			display: inline;
+   			margin-right: 10px;
+   		}
+   		
+   		#myInputOrganization {
+   			width: 20%;
+   			display: inline;
+   			margin-right: 10px;
+   		}
+   		#mySelectDepartment {
+   			width: 20%;
+   			display: inline;
+   			margin-right: 10px;
+   		}
+   		
+   		#myInputDepartment {
+   			width: 20%;
+   			display: inline;
+   			margin-right: 10px;
+   		}
+    </style>
+    
     <!-- Load AngularJS -->
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.0/angular.min.js"></script>
     <script type="text/javascript">
@@ -15,6 +54,8 @@
 
         //Initialize page with default data which is blank in this example
         $scope.employees = [];
+        $scope.organizations = [];
+        $scope.departments = [];
 
         $scope.form = {                
           name: "",
@@ -47,13 +88,34 @@
         function _refreshPageData() {
           $http({
             method: 'GET',
-            url: '/employees'
+            url: '/employees/details'
           }).then(function successCallback(response) {
 		        	console.log(response.data);  
 		            $scope.employees = response.data;
           }, function errorCallback(response) {
 	            console.log(response.statusText);
           });
+
+          $http({
+              method: 'GET',
+              url: 'http://127.0.0.1:8085/organizations'
+            }).then(function successCallback(response) {
+  		        	console.log(response.data);  
+  		            $scope.organizations = response.data;
+            }, function errorCallback(response) {
+  	            console.log(response.statusText);
+          });
+
+          $http({
+              method: 'GET',
+              url: 'http://127.0.0.1:8083/departments'
+            }).then(function successCallback(response) {
+  		        	console.log(response.data);  
+  		            $scope.departments = response.data;
+            }, function errorCallback(response) {
+  	            console.log(response.statusText);
+          });
+          
         }
 
         function _success(response) {
@@ -75,12 +137,14 @@
         }
         
       });
+             
     </script>
 </head>
 
 <body ng-app="EmployeeManagement" ng-controller="EmployeeManagementController">
 
 <div class="container">
+    
     <h1>REST Service - Employee</h1>
 
     <h3>Add a employee</h3>
@@ -95,29 +159,72 @@
             <div class="col-6"><input type="text" placeholder="Position" ng-model="form.position" size="20"/></div>
         </div>
         <div class="row">
-            <div class="col-6"><input type="text" placeholder="Organization" ng-model="form.organization" size="20"/></div>
+            <div class="col-6">
+            	<input type="text" placeholder="Organization" ng-model="form.organization" size="20" id="myInputOrganization"/> 
+            	<select id="mySelectOrganization" ng-model="form.organization">
+					<option value="0">Select or insert a value</option>
+					<option ng-repeat="org in organizations" value="{{org.id}}">{{org.id}}</option>
+				</select>
+		   </div>
         </div>
         <div class="row">
-            <div class="col-6"><input type="text" placeholder="Department" ng-model="form.department" size="20"/></div>
+            <div class="col-6">
+            <input type="text" placeholder="Department" ng-model="form.department" size="20" id="myInputDepartment"/>
+	            <select id="mySelectDepartment" ng-model="form.department">
+					<option value="0">Select or insert a value</option>
+					<option ng-repeat="dep in departments" value="{{dep.id}}">{{dep.id}}</option>
+				</select>
+            </div>
         </div>
         <input type="submit" value="Save"/>
     </form>
+    
+    <h3>Employee Details List</h3>
+    <table class="table table-bordered">
+	  <thead>
+	    <tr>
+	      <th scope="col">Id</th>
+	      <th scope="col">Name</th>
+	      <th scope="col">Age</th>
+	      <th scope="col">Position</th>
+	      <th scope="col">Organization</th>
+	      <th scope="col">Department</th>
+	    </tr>
+	  </thead>
+	  <tbody>
+	    <tr ng-repeat="emp in employees">
+	      <th scope="row">{{ emp.employee.id }}</th>
+	      <td>{{ emp.employee.name }}</td>
+	      <td>{{ emp.employee.age }}</td>
+	      <td>{{ emp.employee.position }}</td>
+	      <td>{{ emp.organization.name }}</td>
+	      <td>{{ emp.department.name }}</td>
+	    </tr> 
+	  </tbody>
+	</table>
 
-    <h3>Employee List</h3>
-    <div class="row">
-        <div class="col-4">Name</div>
-        <div class="col-4">Age</div>
-        <div class="col-4">Position</div>
-        <div class="col-4">Organization</div>
-        <div class="col-4">Department</div>
-    </div>
-    <div class="row" ng-repeat="emp in employees">
-        <div class="col-4">{{ emp.name }}</div>
-        <div class="col-4">{{ emp.age }}</div>
-        <div class="col-4">{{ emp.position }}</div>
-        <div class="col-4">{{ emp.organizationId }}</div>
-        <div class="col-4">{{ emp.departmentId }}</div>
-    </div>
+    <h3>Other pom submodule called:</h3>
+	<table class="table table-bordered">
+	  <thead>
+	    <tr>
+	      <th scope="col">Microservice</th>
+	      <th scope="col">Rest Endpoint</th>
+	    </tr>
+	  </thead>
+	  <tbody>
+	    <tr>
+	      <th scope="row">1</th>
+	      <td>departments microservice</td>
+	      <td>http://127.0.0.1:8083/departments</td>
+	    </tr>
+	    <tr>
+	      <th scope="row">2</th>
+	      <td>organizations microservice</td>
+	      <td>http://127.0.0.1:8085/organizations</td>
+	    </tr>
+	  </tbody>
+	</table>
+
 </div>
 
 </body>

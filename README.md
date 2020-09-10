@@ -3,8 +3,8 @@
 ##### Prerequisites
 
 - using Apache Maven >= 3.6.3
-- using Java version >= 1.8  (quarkus run complains, _Using Java versions older than 11 to build Quarkus applications is deprecated and will be disallowed in a future release!_)
-- if use eclipse IDE, install quarkus plugin from marketplace
+- using Java version >= 1.8  (`quarkus:dev` complains, _Using Java versions older than 11 to build Quarkus applications is deprecated and will be disallowed in a future release!_)
+- if use eclipse IDE, install quarkus plugin from marketplace 
 
 **Quarkus** framework It allows us to automatically generate Kubernetes resources based on the defaults and user-provided configuration. It also provides an extension for building and pushing container images, then deploying the application to the target chosen platform: minikube, docker desktop kubernetes, digital ocean, Google Kubernetes Engine GKE, etc.
 
@@ -13,7 +13,7 @@
 - scaffold a project in a single command line
 - enable the *development mode* (hot reload)
 - example Dockerfile files for both _native_ and _jvm_ modes in `src/main/docker`
-- a landing page that is accessible on `http://localhost:8080` after starting the application, other static html/css/img resource can be placed on `meta-inf/resources `dir
+- automatically serves static resources located under the `src/main/resources/META-INF/resources` directory
 - an associated unit test 
 - and more
 
@@ -46,26 +46,23 @@ Run locally
 
 Consume _employee-service_ microservice access to webpage:
 
-Access the quarkus served homepage and navigate to _employee-service_ web page to test this microservices architecture github process:
+Access the quarkus served landing page and navigate to _employee-service_ web page to test this microservices architecture github process:
 
 - http://localhost:8081/my-page.html
 - http://localhost:8081/employees
 
-The same steps are repeatable for microservices project: 
+The same steps are repeatable for microservices projects: 
 
 - _department-service_ 
 
-- _organization_services_
+- _organization-services_
 
 **References**
 
 - Quarkus Startup [https://quarkus.io/guides/getting-started](https://quarkus.io/guides/getting-started)
-
 - Rest Quarkus Microservice [https://quarkus.io/guides/rest-json](https://quarkus.io/guides/rest-json)
-
 - Eclipse IDE Quarkus Setup https://quarkus.io/blog/eclipse-got-quarkused/
-
 - Docker Quarkus https://quarkus.io/guides/container-image
-
 - Kubernetes Quarkus Example https://developers.redhat.com/blog/2020/04/24/ramp-up-on-quarkus-a-kubernetes-native-java-framework/ 
+- Logging https://quarkus.io/guides/logging
 

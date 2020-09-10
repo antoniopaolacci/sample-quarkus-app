@@ -15,9 +15,9 @@ public class DepartmentRepository {
 	private Set<Department> departments = new HashSet<>();
 
     public DepartmentRepository() {
-        add(new Department(1L, "Test1"));
-        add(new Department(2L, "Test2"));
-        add(new Department(2L, "Test3"));
+        add(new Department(1L, "Test DepartmentName One"));
+        add(new Department(2L, "Test DepartmentName Two"));
+        add(new Department(2L, "Test DepartmentName Three"));
     }
 
     public Department add(Department department) {

@@ -25,6 +25,7 @@ public class EmployeeRepository {
     	// initialize some data
         this.add(new Employee(1L, 1L, "John Smith", 30, "Developer"));
         this.add(new Employee(1L, 1L, "Paul Walker", 40, "Architect"));
+        this.add(new Employee(1L, 1L, "John Snow", 35, "Consultant"));
 
     }
 

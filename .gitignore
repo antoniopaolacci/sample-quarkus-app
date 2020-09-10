@@ -16,3 +16,4 @@
 # Project exclude paths
 /employee-service/target/
 /department-service/target/
+/organization-service/target/
