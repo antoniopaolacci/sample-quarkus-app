@@ -4,6 +4,7 @@
     <meta charset="utf-8"/>
     <title>Employee REST service</title>
     <link rel="stylesheet" href="https://unpkg.com/wingcss"/>
+    <link rel="stylesheet" href="./css/popup-style.css"/>
     
     <style>
     	
@@ -45,6 +46,10 @@
     
     <!-- Load AngularJS -->
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.0/angular.min.js"></script>
+    
+    <!-- Load Jquery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    
     <script type="text/javascript">
 
       var app = angular.module("EmployeeManagement", []);
@@ -71,7 +76,11 @@
         //HTTP POST methods for add 
         $scope.add = function () {
 
-          var data = { "name": $scope.form.name, "age": $scope.form.age, "position": $scope.form.position, "organizationId": $scope.form.organization, "departmentId": $scope.form.department };
+          var data = { "name": $scope.form.name, 
+                  		"age": $scope.form.age, 
+                   "position": $scope.form.position, 
+             "organizationId": $scope.form.organization, 
+               "departmentId": $scope.form.department };
 
           $http({
             method: "POST",
@@ -83,7 +92,34 @@
           }).then(_success, _error);
         };
 
+        $scope.organizationFunction = function (id) { 
+            $http({
+                method: 'GET',
+                url: 'http://127.0.0.1:8085/organizations/'+id
+              }).then(function successCallback(response) {
+    		        console.log(response.data);
+    		        $('.hover_bkgr_fricc').show();
+    		        $('#popupContent').html('<b>Organization</b><table class="table table-bordered"><thead><tr><th scope="col">Id</th> <th scope="col">Name</th><th scope="col">Address</th></tr></thead><tbody><tr><th scope="row">'+response.data.id+'</th><td>'+response.data.name+'</td> <td>'+response.data.address+'</td></tr></tbody></table>');
+              }, function errorCallback(response) {
+    	            console.log(response.statusText);
+  			});
+        };
+
+        $scope.departmentFunction = function (id) { 
+            $http({
+                method: 'GET',
+                url: 'http://127.0.0.1:8083/departments/'+id
+              }).then(function successCallback(response) {
+    		        console.log(response.data);
+    		        $('.hover_bkgr_fricc').show();
+    		        $('#popupContent').html('<b>Department</b><table class="table table-bordered"><thead><tr><th scope="col">Id</th><th scope="col">Name</th><th scope="col">Organization</th></tr></thead><tbody><tr><th scope="row">'+response.data.id+'</th><td>'+response.data.name+'</td> <td>'+response.data.organizationId+'</td></tr></tbody></table>');
+              }, function errorCallback(response) {
+    	            console.log(response.statusText);
+  			});
+        };
+
         /* Private Methods */
+        
         //HTTP GET - get all collection
         function _refreshPageData() {
           $http({
@@ -137,7 +173,16 @@
         }
         
       });
-             
+
+      $(window).load(function () {
+	   	    $('.hover_bkgr_fricc').click(function(){
+	   	        $('.hover_bkgr_fricc').hide();
+	   	    });
+	   	    $('.popupCloseButton').click(function(){
+	   	        $('.hover_bkgr_fricc').hide();
+	   	    });
+      });
+        
     </script>
 </head>
 
@@ -197,12 +242,20 @@
 	      <td>{{ emp.employee.name }}</td>
 	      <td>{{ emp.employee.age }}</td>
 	      <td>{{ emp.employee.position }}</td>
-	      <td>{{ emp.organization.name }}</td>
-	      <td>{{ emp.department.name }}</td>
+	      <td><a href ng-click="organizationFunction(emp.organization.id);">{{ emp.organization.name }}</a></td>
+	      <td><a href ng-click="departmentFunction(emp.department.id);">{{ emp.department.name }}</a></td>
 	    </tr> 
 	  </tbody>
 	</table>
-
+	
+	<div class="hover_bkgr_fricc">
+	    <span class="helper"></span>
+	    <div>
+	        <div class="popupCloseButton">X</div>
+	        <p id="popupContent">Add any HTML content<br />inside the popup box!</p>
+	    </div>
+	</div>
+	
     <h3>Other pom submodule called:</h3>
 	<table class="table table-bordered">
 	  <thead>

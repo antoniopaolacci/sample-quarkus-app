@@ -34,7 +34,7 @@ public class OrganizationController {
 
     @GET
     public Set<Organization> findAll() {
-        LOGGER.info("Organization find");
+        LOGGER.info("Organization find all.");
         return repository.findAll();
     }
 

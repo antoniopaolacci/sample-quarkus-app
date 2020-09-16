@@ -12,7 +12,7 @@
 
 - scaffold a project in a single command line
 - enable the *development mode* (hot reload)
-- example Dockerfile files for both _native_ and _jvm_ modes in `src/main/docker`
+- example Dockerfile files for both _native_ and _jvm_ modes in `src/main/docker`. Instructions to build the image and run the container are written in those Dockerfiles.
 - automatically serves static resources located under the `src/main/resources/META-INF/resources` directory
 - an associated unit test 
 - and more
@@ -30,6 +30,10 @@ For example add to our project future-use dependancies:
 `mvn quarkus:add-extension -Dextensions="hibernate-orm, jdbc-mysql"
 mvn quarkus:add-extension -Dextensions="metrics"`
 
+**Obtain list of dependencies**
+
+`mvnw quarkus:list-extensions`
+
 **Test**
 
 Test locally  (quarkus provide junit5, REST-assured and use Hamcrest matchers to do assertion)
@@ -41,6 +45,8 @@ Test locally  (quarkus provide junit5, REST-assured and use Hamcrest matchers to
 Run locally 
 
 `mvnw compile quarkus:dev`
+
+`quarkus:dev` enables hot deployment with background compilation, which means that when you modify your Java files or your resource files and refresh  your browser these changes will automatically take effect.
 
 **Consume**
 
@@ -56,6 +62,17 @@ The same steps are repeatable for microservices projects:
 - _department-service_ 
 
 - _organization-services_
+
+  
+
+**Kubernetes**
+
+Quarkus can use the project *Dekorate* to generate an opinionated base Kubernetes resource.
+`./mvnw quarkus:add-extension -Dextensions="quarkus-kubernetes"`
+When running the `./mvnw package` the Kubernetes resources are created in the t*arget/*
+*wiring-classes/META-INF/kubernetes/* directory.
+
+
 
 **References**
 

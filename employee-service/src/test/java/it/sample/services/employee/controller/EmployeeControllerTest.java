@@ -79,7 +79,7 @@ public class EmployeeControllerTest {
 
 		log.debug("----- INIT TEST testAddEmployee() -----");
 		
-		Employee emp = new Employee(1L, 1L, "Joe Fake", 34, "Consultant");
+		Employee emp = new Employee("Joe Fake", 34, "Consultant", 1L, 1L);
 
 		given()
 		.body(emp).contentType(ContentType.JSON)

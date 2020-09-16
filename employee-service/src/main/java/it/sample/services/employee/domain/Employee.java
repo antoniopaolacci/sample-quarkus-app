@@ -40,12 +40,6 @@ public class Employee {
 
     private Long id;
 
-    @NotNull
-    private Long organizationId;
-
-    @NotNull
-    private Long departmentId;
-
     @NotBlank
     private String name;
 
@@ -56,13 +50,19 @@ public class Employee {
     @NotBlank
     private String position;
     
+    @NotNull
+    private Long organizationId;
+
+    @NotNull
+    private Long departmentId;
+    
     // Other constructor:
-    public Employee(Long organizationId, Long departmentId, String name, int age, String position) {
-        this.organizationId = organizationId;
-        this.departmentId = departmentId;
+    public Employee(String name, int age, String position, Long organizationId, Long departmentId) {
         this.name = name;
         this.age = age;
         this.position = position;
+        this.organizationId = organizationId;
+        this.departmentId = departmentId;
     }
 
 }//end class
