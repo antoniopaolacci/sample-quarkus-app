@@ -14,7 +14,9 @@ _README.md_ explains how to:
 Inspect POM file, some dependencies are added.
 
 `mvnw quarkus:add-extension -Dextensions="hibernate-orm, jdbc-mysql"`
+
 `mvnw quarkus:add-extension -Dextensions="metrics"`
+
 `mvnw quarkus:add-extension -Dextensions="health"`
 
 `mvnw quarkus:add-extension -Dextensions="smallrye-opentracing"`
