@@ -19,6 +19,8 @@
 
 **Bootstrap**
 
+> Using **Quarkus** for building REST application that connects to Mysql database using Hibernate ORM and communicate with others microservices. Goals are: to rapid test it throught mockup and in-memory persistence hot switch, to interact with all the web services through html pages,  to take care of logging, OAuth2 for securing endpoints...
+
 In a java parent POM project create a simple quarkus REST microservice with maven, called it _employee-service_:
 
 `mvn io.quarkus:quarkus-maven-plugin:1.7.1.Final:create -DprojectGroupId=it.example.services -DprojectArtifactId=employee-service -DclassName="it.example.services.employee.controller.EmployeeController" -Dpath="/employees" -Dextensions="resteasy-jackson, hibernate-validator, rest-client, resteasy"`
@@ -27,8 +29,15 @@ A list of dependencies that need to be used in pom.xml, should be declared in pa
 
 For example add to our project future-use dependancies:
 
-`mvn quarkus:add-extension -Dextensions="hibernate-orm, jdbc-mysql"
-mvn quarkus:add-extension -Dextensions="metrics"`
+- Mysql and Hibernate support
+
+`mvn quarkus:add-extension -Dextensions="hibernate-orm, jdbc-mysql"`
+
+or for example to trace on logs:
+
+- OpenTracing support
+
+`mvnw quarkus:add-extension -Dextensions="smallrye-opentracing"`   
 
 **Obtain list of dependencies**
 
@@ -50,20 +59,23 @@ Run locally
 
 **Consume**
 
-Consume _employee-service_ microservice access to webpage:
+To Consume _employee-service_ microservice access to webpage:
 
 Access the quarkus served landing page and navigate to _employee-service_ web page to test this microservices architecture github process:
 
 - http://localhost:8081/index.html
 - http://localhost:8081/employees
 
-The same steps are repeatable for microservices projects: 
+if you access an incorrect address a *404 NOT FOUND* html page display all the Rest endpoint, something similar to Swagger.
+
+The same are repeatable for microservices projects: 
 
 - _department-service_ 
 
 - _organization-services_
 
-  
+
+
 
 **Kubernetes**
 
@@ -81,5 +93,6 @@ When running the `./mvnw package` the Kubernetes resources are created in the t*
 - Eclipse IDE Quarkus Setup https://quarkus.io/blog/eclipse-got-quarkused/
 - Docker Quarkus https://quarkus.io/guides/container-image
 - Kubernetes Quarkus Example https://developers.redhat.com/blog/2020/04/24/ramp-up-on-quarkus-a-kubernetes-native-java-framework/ 
-- Logging https://quarkus.io/guides/logging
+- Logging https://quarkus.io/guides/logging   Tracing https://quarkus.io/guides/opentracing
+- Application Configuration https://antoniogoncalves.org/2019/06/07/configuring-a-quarkus-application/
 

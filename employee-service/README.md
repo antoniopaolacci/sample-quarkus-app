@@ -17,6 +17,8 @@ Inspect POM file, some dependencies are added.
 `mvnw quarkus:add-extension -Dextensions="metrics"`
 `mvnw quarkus:add-extension -Dextensions="health"`
 
+`mvnw quarkus:add-extension -Dextensions="smallrye-opentracing"`
+
 In a test environment we want to use an H2 database:
 
 `mvnw quarkus:add-extension -Dextensions="jdbc-h2"`
