@@ -12,7 +12,7 @@ public class OrganizationControllerTest {
     @Test
     public void testHelloEndpoint() {
         given()
-          .when().get("/organizations")
+          .when().get("/organizations/hello")
           .then()
              .statusCode(200)
              .body(is("hello"));

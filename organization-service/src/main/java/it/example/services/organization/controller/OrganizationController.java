@@ -25,7 +25,14 @@ public class OrganizationController {
 
     @Inject
     OrganizationRepository repository;
-   
+
+    @Path("/hello")
+    @GET
+    public String hello() {
+        LOGGER.info("Hello!");
+       	return "hello";
+    }
+    
     @POST
     public Organization add(@Valid Organization organization) {
         LOGGER.info("Organization add: {}", organization);
