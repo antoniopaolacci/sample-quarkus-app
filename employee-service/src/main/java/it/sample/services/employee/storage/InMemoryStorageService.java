@@ -15,8 +15,8 @@ import javax.enterprise.context.ApplicationScoped;
 public class InMemoryStorageService implements StorageService {
 
 	private List<PersistedEmployee> employees = new LinkedList<PersistedEmployee>();
-	private long tableSize;
-
+	
+	// INIT
 	public InMemoryStorageService(){
 		employees.add(new PersistedEmployee(1, "John Smith", 30, "Developer", 1, 2));
 		employees.add(new PersistedEmployee(2, "Paul Walker", 40, "Architect", 1, 2));
@@ -102,6 +102,11 @@ public class InMemoryStorageService implements StorageService {
 	@Override
 	public long count() {
 		return this.employees.size();
+	}
+	
+	@Override
+	public boolean isReady() {
+		return  this.employees!=null ? this.employees.size() >= 0 : false;
 	}
 	
 	

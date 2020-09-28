@@ -113,6 +113,11 @@ public class PersistentStorageService implements StorageService {
 		}
 	}
 	
+	@Override
+	public boolean isReady() {
+		return db.isOpen();
+	}
+	
 	
 	//
 	// ---------------- HELP! METHODS
@@ -151,6 +156,5 @@ public class PersistentStorageService implements StorageService {
 		
 		return Optional.ofNullable(persisted);
 	}
-
 	
 } 

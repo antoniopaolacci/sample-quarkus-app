@@ -1,4 +1,4 @@
-package it.sample.utils;
+package it.sample.services.util;
 
 import java.io.IOException;
 import java.io.Serializable;

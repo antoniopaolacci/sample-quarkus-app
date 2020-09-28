@@ -8,6 +8,8 @@ import it.sample.services.employee.rest.client.OrganizationRestClient;
 import it.sample.services.employee.storage.ConfiguredStorage;
 import it.sample.services.employee.storage.StorageService;
 
+import org.eclipse.microprofile.metrics.annotation.Timed;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -60,6 +62,7 @@ public class EmployeeController {
 	}
     
     @GET
+    @Timed
     public List<Employee> findAll() {
     	log.info("Employee find all.");
     	List<Employee> employeesList = storage.getAll(); 
@@ -67,6 +70,7 @@ public class EmployeeController {
     }
 
     @POST
+    @Timed
     public Employee add(@Valid Employee employee) throws Exception {
     	log.info("Employee add: {}", employee); 
         Optional<Employee> retrieved = this.storage.add(employee);
@@ -80,6 +84,7 @@ public class EmployeeController {
 
     @Path("/{id}")
     @GET
+    @Timed
     public Employee findById(@PathParam("id") Long id) {
         log.info("Employee findById: id={}", id);
         Optional<Employee> retrieved = this.storage.findById(id);
@@ -93,6 +98,7 @@ public class EmployeeController {
 
     @Path("/department/{departmentId}")
     @GET
+    @Timed
     public Set<Employee> findByDepartment(@PathParam("departmentId") Long departmentId) {
         log.info("Employee findByDepartment: departmentId={}", departmentId);
         return repository.findByDepartment(departmentId);
@@ -100,6 +106,7 @@ public class EmployeeController {
 
     @Path("/organization/{organizationId}")
     @GET
+    @Timed
     public Set<Employee> findByOrganization(@PathParam("organizationId") Long organizationId) {
         log.info("Employee findByOrganization: organizationId={}", organizationId);
         return repository.findByOrganization(organizationId);
@@ -107,6 +114,7 @@ public class EmployeeController {
     
     @Path("/version")
     @GET
+    @Timed
     public String getVersion() {
     	log.info("Project version={}", this.version);
     	return this.version;
@@ -149,6 +157,7 @@ public class EmployeeController {
 
     @Path("/details")
     @GET
+    @Timed
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response list() {
@@ -176,6 +185,7 @@ public class EmployeeController {
     }
     
     @DELETE
+    @Timed
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response delete(Employee employee) {

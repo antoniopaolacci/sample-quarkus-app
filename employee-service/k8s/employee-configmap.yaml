@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    app-type: demo
+    app.kubernetes.io/name: employee-service
+    app.kubernetes.io/version: "1.1"
+  name: employee-config
+data:
+  DEPARTMENT_HOST: department-service
+  DEPARTMENT_PORT: 8083
+  ORGANIZATION_HOST: organization-service
+  ORGANIZATION_PORT: 8085

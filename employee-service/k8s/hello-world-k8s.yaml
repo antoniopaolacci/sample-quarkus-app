@@ -1,0 +1,46 @@
+# hello-kubernetes.custom-message.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: hello-kubernetes-custom
+  namespace: default
+spec:
+  type: NodePort
+  selector:
+    app: hello-kubernetes-custom
+  ports:
+  - port: 8080
+    targetPort: 8080
+    nodePort: 30001
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-kubernetes-custom
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: hello-kubernetes-custom
+  template:
+    metadata:
+      labels:
+        app: hello-kubernetes-custom
+    spec:
+      containers:
+      - name: hello-kubernetes
+        image: paulbouwer/hello-kubernetes:1.8
+        ports:
+        - containerPort: 8080
+        env:
+        - name: MESSAGE
+          value: This is just only another Kubernetes deployment!
+
+#
+# kubectl apply -f hello-world-k8s.yaml
+# kubectl get deployments
+# kubectl get po
+# kubectl get services
+#
+# Open a browser and visit your bulletin board at localhost:30001 (using NodePort service)
+#

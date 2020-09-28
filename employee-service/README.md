@@ -13,7 +13,7 @@ _README.md_ explains how to:
 
 Inspect POM file, some dependencies are added.
 
-`mvnw quarkus:add-extension -Dextensions="hibernate-orm, jdbc-mysql"`
+`mvnw quarkus:add-extension -Dextensions="hibernate-orm, jdbc-mysql, jdbc-postgresql"`
 
 `mvnw quarkus:add-extension -Dextensions="metrics"`
 
@@ -34,8 +34,16 @@ In a test environment we want to use an H2 database:
 ##### Run test:
 `mvnw test`
 
+##### Access quarkus application metrics and health:
+
+- http://localhost:8081/metrics
+- http://localhost:8081/health
+- http://localhost:8081/health/live  
+- http://localhost:8081/health/ready
+
 ##### Access quarkus application on:
-- Landing page:  http://localhost:8081/my-page.html
+- Landing page:  http://localhost:8081/employee-page.html
 - Rest endpoint:  http://localhost:8081/employees
+- Swagger:  http://localhost:8081/swagger-ui
 
 

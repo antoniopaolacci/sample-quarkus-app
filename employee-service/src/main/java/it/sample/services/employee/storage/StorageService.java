@@ -20,5 +20,7 @@ public interface StorageService {
 	Optional<Employee> findById(Long id);
 
 	long count();
+	
+	boolean isReady();
 
 }
