@@ -61,6 +61,18 @@
       <version>1.18.12</version>
       <optional>true</optional>
     </dependency>
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-smallrye-opentracing</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-kubernetes</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-container-image-docker</artifactId>
+    </dependency>
   </dependencies>
   <build>
     <plugins>

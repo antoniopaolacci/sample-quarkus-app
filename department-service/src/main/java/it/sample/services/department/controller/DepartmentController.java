@@ -25,7 +25,14 @@ public class DepartmentController {
 
     @Inject
     DepartmentRepository repository;
-
+    
+    @Path("/hello")
+    @GET
+    public String hello() {
+        LOGGER.info("Hello!");
+       	return "hello";
+   }
+    
     @Path("/")
     @POST
     public Department add(@Valid Department department) {
@@ -42,7 +49,7 @@ public class DepartmentController {
 
     @GET
     public Set<Department> findAll() {
-        LOGGER.info("Department find");
+        LOGGER.info("Department find all.");
         return repository.findAll();
     }
 

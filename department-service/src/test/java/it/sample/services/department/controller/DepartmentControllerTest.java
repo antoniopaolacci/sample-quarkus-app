@@ -12,7 +12,7 @@ public class DepartmentControllerTest {
     @Test
     public void testHelloEndpoint() {
         given()
-          .when().get("/departments")
+          .when().get("/departments/hello")
           .then()
              .statusCode(200)
              .body(is("hello"));
