@@ -7,6 +7,7 @@ import io.vertx.core.http.HttpServerResponse;
 import it.sample.services.util.TID;
 
 import java.io.IOException;
+import java.util.Set;
 
 import javax.inject.Inject;
 import javax.ws.rs.container.ContainerRequestContext;
@@ -14,9 +15,11 @@ import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.container.ContainerResponseContext;
 import javax.ws.rs.container.ContainerResponseFilter;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.ext.Provider;
 
+import org.jboss.resteasy.spi.HttpRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -35,6 +38,10 @@ public class LoggingFilter implements ContainerRequestFilter, ContainerResponseF
 
 	@Context
 	HttpServerRequest request;
+	
+
+    @Context
+    HttpRequest httpRequest;
 
 	@Context
 	HttpServerResponse response;
@@ -42,6 +49,12 @@ public class LoggingFilter implements ContainerRequestFilter, ContainerResponseF
 	@Override
 	public void filter(ContainerRequestContext containerRequestContext) {
 
+		// try to print query parameters from inject of org.jboss.resteasy.spi.HttpRequest
+		MultivaluedMap<String, String> queryParameters = httpRequest.getUri().getQueryParameters();
+		Set<String> keys = queryParameters.keySet();
+		final StringBuffer sbQuery = new StringBuffer();
+		keys.forEach(entry -> sbQuery.append(entry+" "+queryParameters.get(entry)+" "));
+		
 		MDC.put("MYTID", new TID().toString());
 
 		final String method = request.method().toString(); 

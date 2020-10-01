@@ -46,4 +46,24 @@ In a test environment we want to use an H2 database:
 - Rest endpoint:  http://localhost:8081/employees
 - Swagger:  http://localhost:8081/swagger-ui
 
+#### Kubernetes
+
+Add quarkus dependencies, build and deply
+
+`mvnw quarkus:add-extension -Dextensions="quarkus-kubernetes, quarkus-container-image-docker, quarkus-kubernetes-config"`
+
+- `quarkus-kubernetes` (extension provide support mechanisms for generating Kubernetes manifests, deploying them on the platform)
+
+- `quarkus-container-image-docker` (to build image from Dockerfile on `/src/main/docker/`)
+
+
+Create kubernetes manifest
+
+`mvnw package`  (find yaml on */employee-service/target/kubernetes/*)
+
+Deploy on kubernetes cluster and publish image on *docker.io* registry
+
+`mvnw clean package -Dquarkus.container-image.build=true -Dquarkus.container-image.push=true -Dquarkus.kubernetes.deploy=true`
+
+![image](https://github.com/antoniopaolacci/sample-quarkus-app/blob/master/employee-service/deploy.jpg)
 
