@@ -40,13 +40,16 @@ Add quarkus dependencies, build and deply
 
 - `quarkus-kubernetes` (extension provide support mechanisms for generating Kubernetes manifests, deploying them on the platform)
 
-- `quarkus-container-image-docker` (to build image from Dockerfile on `/src/main/docker`\)
+- `quarkus-container-image-docker` (to build image from Dockerfile on `/src/main/docker/`)
 
 
 Create kubernetes manifest
 
-`mvnw package`  (find it on */department-service/target/kubernetes*)
+`mvnw package`  (find yaml on */organization-service/target/kubernetes/*)
 
 Deploy on kubernetes cluster and publish image on *docker.io* registry
 
 `mvnw clean package -Dquarkus.container-image.build=true -Dquarkus.container-image.push=true -Dquarkus.kubernetes.deploy=true`
+
+![image](https://github.com/antoniopaolacci/sample-quarkus-app/blob/master/organization-service/deploy.jpg)
+
