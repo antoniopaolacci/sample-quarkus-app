@@ -18,4 +18,15 @@ public class OrganizationControllerTest {
              .body(is("hello"));
     }
 
+	@Test
+	public void testOrganizations() {
+
+		given()
+		.when().get("/organizations")
+		.then()
+		.statusCode(200)
+		.assertThat().body("size()", is(2));
+
+	}
+    
 }

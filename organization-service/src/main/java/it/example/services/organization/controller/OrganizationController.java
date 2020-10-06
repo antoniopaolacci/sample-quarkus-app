@@ -1,8 +1,10 @@
 package it.example.services.organization.controller;
 
 import it.example.services.organization.domain.Organization;
+import it.example.services.organization.repository.OrganizationPersistenceRepository;
 import it.example.services.organization.repository.OrganizationRepository;
 
+import java.util.List;
 import java.util.Set;
 
 import javax.inject.Inject;
@@ -23,8 +25,11 @@ public class OrganizationController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OrganizationController.class);
 
+//  @Inject
+//  OrganizationRepository repository;
+    
     @Inject
-    OrganizationRepository repository;
+    OrganizationPersistenceRepository repository;
 
     @Path("/hello")
     @GET
@@ -40,7 +45,7 @@ public class OrganizationController {
     }
 
     @GET
-    public Set<Organization> findAll() {
+    public List<Organization> findAll() {
         LOGGER.info("Organization find all.");
         return repository.findAll();
     }

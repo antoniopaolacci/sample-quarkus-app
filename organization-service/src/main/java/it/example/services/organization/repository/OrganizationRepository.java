@@ -9,7 +9,7 @@ import javax.enterprise.context.ApplicationScoped;
 @ApplicationScoped
 public class OrganizationRepository {
 
-	private Set<Organization> organizations = new HashSet<>();
+	private List<Organization> organizations = new LinkedList<>();
 
 	public OrganizationRepository() {
 		add(new Organization("OrganizationName 1", "Address 1"));
@@ -17,25 +17,25 @@ public class OrganizationRepository {
 	}
 
 	public Organization add(Organization organization) {
-		
+
 		organization.setId((long) (organizations.size()+1));
 		organizations.add(organization);
-		
+
 		return organization;
 	}
-	
+
 	public Organization findById(Long id) {
-		
+
 		Optional<Organization> organization = organizations.stream().filter(a -> a.getId().equals(id)).findFirst();
-		
+
 		if (organization.isPresent())
 			return organization.get();
 		else
 			return null;
 	}
 
-	public Set<Organization> findAll() {
+	public List<Organization> findAll() {
 		return organizations;
 	}
-	
+
 }

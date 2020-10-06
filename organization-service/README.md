@@ -13,6 +13,14 @@ _README.md_ explains how to:
 mvn io.quarkus:quarkus-maven-plugin:1.7.1.Final:create -DprojectGroupId=it.example.services -DprojectArtifactId=organization-service -DclassName="it.example.services.organization.controller.OrganizationController" -Dpath="/organizations" -Dextensions="resteasy-jackson, hibernate-validator, rest-client, resteasy, hibernate-orm, jdbc-mysql, metrics, health"
 ```
 
+#### Add some dependencies:
+
+`mvnw quarkus:add-extension -Dextensions="jdbc-postgresql, jdbc-h2"`
+
+#### and some other:
+
+`mvnw quarkus:add-extension -Dextensions="smallrye-opentracing"`
+
 ##### Import on Eclipse IDE:
 
 `mvn eclipse:eclipse`
