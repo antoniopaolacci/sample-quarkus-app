@@ -3,8 +3,7 @@ package it.sample.services.department.controller;
 import it.sample.services.department.domain.Department;
 import it.sample.services.department.repository.DepartmentRepository;
 
-import java.util.Set;
-
+import java.util.List;
 import javax.inject.Inject;
 import javax.validation.Valid;
 import javax.ws.rs.GET;
@@ -48,14 +47,14 @@ public class DepartmentController {
     }
 
     @GET
-    public Set<Department> findAll() {
+    public List<Department> findAll() {
         LOGGER.info("Department find all.");
         return repository.findAll();
     }
 
     @Path("/organization/{organizationId}")
     @GET
-    public Set<Department> findByOrganization(@PathParam("organizationId") Long organizationId) {
+    public List<Department> findByOrganization(@PathParam("organizationId") Long organizationId) {
         LOGGER.info("Department find: organizationId={}", organizationId);
         return repository.findByOrganization(organizationId);
     }

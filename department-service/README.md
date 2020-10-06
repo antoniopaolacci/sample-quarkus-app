@@ -14,6 +14,9 @@ _README.md_ explains how to:
 #### Add some dependencies:
 `mvnw quarkus:add-extension -Dextensions="smallrye-opentracing"`
 
+#### Add persistence dependencies:
+`mvnw quarkus:add-extension -Dextensions="hibernate-orm, jdbc-mysql, jdbc-postgresql, jdbc-h2"`
+
 ##### Import on Eclipse IDE:
 
 `mvn eclipse:eclipse`

@@ -2,46 +2,53 @@ package it.sample.services.department.repository;
 
 import it.sample.services.department.domain.Department;
 
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.List;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.transaction.Transactional;
 
 @ApplicationScoped
 public class DepartmentRepository {
 
-	private Set<Department> departments = new HashSet<>();
+    // ======================================
+    // =             Injection              =
+    // ======================================
 
-    public DepartmentRepository() {
-        add(new Department(1L, "Test DepartmentName One"));
-        add(new Department(2L, "Test DepartmentName Two"));
-        add(new Department(2L, "Test DepartmentName Three"));
+    @Inject
+    EntityManager entityManager;
+
+    // ======================================
+    // =              Methods               =
+    // ======================================
+
+    @Transactional
+    public Department findById(final Long id) {
+        return entityManager.find(Department.class, id);
     }
 
-    public Department add(Department department) {
-        department.setId((long) (departments.size() + 1));
-        departments.add(department);
-        return department;
+    @Transactional
+    public List<Department> findAll() {
+        return entityManager.createQuery("SELECT m FROM Department m", Department.class).getResultList();
     }
 
-    public Department findById(Long id) {
-        
-    	Optional<Department> department = departments.stream().filter(a -> a.getId().equals(id)).findFirst();
-        
-    	if (department.isPresent())
-            return department.get();
-        else
-            return null;
+    @Transactional
+    public Department add(Department d) {
+        entityManager.persist(d);
+        return d;
     }
 
-    public Set<Department> findAll() {
-        return departments;
+    @Transactional
+    public Department update(Department d) {
+        return entityManager.merge(d);
     }
 
-    public Set<Department> findByOrganization(Long organizationId) {
-        return departments.stream().filter(a -> a.getOrganizationId().equals(organizationId)).collect(Collectors.toSet());
+    @Transactional
+    public List<Department> findByOrganization(Long organizationId) {
+    	return  entityManager.createQuery("SELECT m FROM Department m WHERE m.organizationId = :id", Department.class)
+                .setParameter("id", organizationId)
+                .getResultList();
     }
-
+    
 }//end class
