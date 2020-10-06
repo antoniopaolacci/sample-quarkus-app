@@ -1,7 +1,8 @@
 -- on kubernetes switch to use postgres, we need to do some adjustment against mysql
 
--- table
+-- table already created by quarkus.hibernate-orm.database.generation = drop-and-create
 
+/* 
 CREATE TABLE employee (
   id SERIAL PRIMARY KEY,
   name VARCHAR(255) NOT NULL,
@@ -10,6 +11,7 @@ CREATE TABLE employee (
   organizationId BIGINT NOT NULL,
   departmentId BIGINT NOT NULL
 );
+*/
 
 -- insert into
 

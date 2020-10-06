@@ -51,9 +51,12 @@ public class LoggingFilter implements ContainerRequestFilter, ContainerResponseF
 
 		// try to print query parameters from inject of org.jboss.resteasy.spi.HttpRequest
 		MultivaluedMap<String, String> queryParameters = httpRequest.getUri().getQueryParameters();
+		log.info("--  QueryParameters -- Size ["+queryParameters.size()+"]");
 		Set<String> keys = queryParameters.keySet();
 		final StringBuffer sbQuery = new StringBuffer();
 		keys.forEach(entry -> sbQuery.append(entry+" "+queryParameters.get(entry)+" "));
+		log.info(sbQuery.toString());
+		// ---------------------------------------------------------------------------------------
 		
 		MDC.put("MYTID", new TID().toString());
 
