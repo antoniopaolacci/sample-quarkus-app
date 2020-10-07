@@ -1,10 +1,10 @@
 # sample-quarkus-application
 
-##### Prerequisites
+**Prerequisites**
 
-- using Apache Maven >= 3.6.3
-- using Java version >= 1.8  (`mvnw quarkus:dev` complains, _Using Java versions older than 11 to build Quarkus applications is deprecated and will be disallowed in a future release!_)
-- if use eclipse IDE, install quarkus plugin from marketplace 
+- using Apache **Maven >= 3.6.3**
+- using **Java version >= 1.8**  (`mvnw quarkus:dev` complains, _Using Java versions older than 11 to build Quarkus applications is deprecated and will be disallowed in a future release!_)
+- if use **eclipse** IDE, install **quarkus plugin** from marketplace 
 
 **Quarkus** framework It allows us to automatically generate Kubernetes resources based on the defaults and user-provided configuration. It also provides an extension for building and pushing container images, then deploying the application to the target chosen platform: minikube, docker desktop kubernetes, digital ocean, Google Kubernetes Engine GKE, etc.
 
@@ -17,9 +17,9 @@
 - an associated unit test 
 - and more
 
-**Bootstrap**
+**Bootstrap** and **Scaffolding**
 
-> Using **Quarkus** for building REST application that connects to Mysql database using Hibernate ORM and communicate with others microservices. our goals are: to rapid test it throught mockup and an in-memory persistence switch, to interact with rest web services through angular/html pages,  to take care of logging, OAuth2 for securing endpoints...
+> Using **Quarkus** for building REST application that connects to Mysql database using Hibernate ORM and communicate with others microservices. our goals are: to rapid test it throught mockup and an in-memory persistence switch, to interact with rest web services through angular/html pages,  to take care of logging, OAuth2 for securing rest endpoints, etc
 
 In a java parent POM directory create a simple quarkus REST microservice with maven, called it _employee-service_:
 
@@ -39,7 +39,7 @@ or for example to trace on logs:
 
 `mvnw quarkus:add-extension -Dextensions="smallrye-opentracing"`   
 
-**Obtain list of dependencies**
+**List of POM dependencies**
 
 `mvnw quarkus:list-extensions`
 
@@ -136,6 +136,62 @@ In order to build a Docker image with the application, we need to enable option 
 if you want to push on docker registry:
 
 `mvnw clean package -Dquarkus.container-image.build=true -Dquarkus.container-image.push=true -Dquarkus.kubernetes.deploy=true`
+
+
+
+**OAuth2**
+
+> Quarkus OAuth2 support is based on the WildFly Elytron Security project. Using Quarkus OAuth2 extension to provide RBAC authorization based on integration with Keycloak. 
+
+
+
+Include Quarkus modules for OAuth2 or use `mvn quarkus:add-extension -Dextensions="security-oauth2"`
+
+```xml
+<dependency>
+   <groupId>io.quarkus</groupId>
+   <artifactId>quarkus-elytron-security-oauth2</artifactId>
+</dependency>
+```
+
+
+
+Quarkus OAuth2 provides a set of annotations for setting permissions. We can allow to call an endpoint by any user with `@PermitAll` annotation. The annotation `@DenyAll` indicates that the given endpoint cannot be accessed by anyone. We can  also define a list of roles allowed for calling a given endpoint with `@RolesAllowed`. The controller contains different types of CRUD methods. I defined three roles: `viewer`, `manager`, and `admin`. The `viewer` role allows calling only GET methods. The `manager` role allows calling GET and POST methods. 
+
+| Roles     | Http Methods | Java Controller Methods                                      | Rest URL                                                     |
+| --------- | ------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| `viewer`  | GET          | findById, findAll, findAllByDepartment, findAllByOrganization | /employees, /employees/id, /employees/department/id,  /employees/organization/id |
+| `manager` | GET, POST    | add, update, delete                                          | /employees, /employees/id                                    |
+| `admin`   | GET, POST    | manageUser                                                   | /app/manage, /app/test                                       |
+
+
+
+Running KeyCloak on docker container
+
+```bash
+docker run -d --name keycloak -p 8888:8181 -e KEYCLOAK_USER=quarkus -e KEYCLOAK_PASSWORD=quarkus123 quay.io/keycloak/keycloak:11.0.2 -Djboss.http.port=8181
+```
+
+Please note that we have bound Keycloak to a different port (8181) from the default one (8080) in case you are already using that port for other services.
+
+Go to the [Keycloak Admin Console](http://localhost:8181/auth/admin) and login with the username and password you created earlier.
+
+First, we need to create a client with a given name. Let’s say this name is `quarkus`. The client credentials are used during the authorization process. It is important to choose `confidential` in the “Access Type” section and enable option “Direct Access Grants”.
+
+Then we may switch to the “Credentials” tab, and copy the client `Secret` .
+
+In the next steps, we will use two HTTP endpoints exposed by Keycloak. First of them, `token_endpoint` allows you to generate new access tokens. The second endpoint `introspection_endpoint` is used to retrieve the active state of a token. In other words, you can use it to validate access or refresh token.
+
+
+
+Setting configuration properties on Quarkus OAuth2 module:
+
+```properties
+quarkus.oauth2.client-id=quarkus
+quarkus.oauth2.client-secret=7dd4d516-e06d-4d81-b5e7-3a15debacebf
+quarkus.oauth2.introspection-url=http://localhost:8888/auth/realms/master/protocol/openid-connect/token/introspect
+quarkus.oauth2.role-claim=roles
+```
 
 
 

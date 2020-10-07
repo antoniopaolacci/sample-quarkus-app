@@ -6,6 +6,20 @@
     <link rel="stylesheet" href="https://unpkg.com/wingcss"/>
     <link rel="stylesheet" href="./css/popup-style.css"/>
     
+    <!--  Initialize the JavaScript Keycloak adapter 
+	    <script src="keycloak.js"></script>
+	    <script>
+	        var keycloak = new Keycloak();
+	        keycloak.init({
+	            onLoad: 'login-required'
+	        }).then(function(authenticated) {
+	            alert(authenticated ? 'authenticated' : 'not authenticated');
+	        }).catch(function() {
+	            alert('failed to initialize');
+	        });
+	    </script> 
+    -->
+    
     <style>
     	
     	body {
@@ -184,6 +198,7 @@
       });
         
     </script>
+       
 </head>
 
 <body ng-app="EmployeeManagement" ng-controller="EmployeeManagementController">

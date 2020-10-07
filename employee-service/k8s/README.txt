@@ -21,3 +21,7 @@ kubectl logs -f employee-service-677d95646d-vb9nn
 ## Add a config map and labelling
 kubectl create configmap employee-config --from-file=config/employee.properties
 kubectl label --overwrite configmap employee-config app-type=demo app.kubernetes.io/name=employee-service app.kubernetes.io/version="1.1"
+
+## Restart a POD tips
+kubectl scale deployment <name-of-deployment> --replicas=0
+kubectl scale deployment <name-of-deployment> --replicas=1

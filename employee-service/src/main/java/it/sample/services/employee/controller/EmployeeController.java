@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
@@ -63,6 +65,7 @@ public class EmployeeController {
     
     @GET
     @Timed
+    @PermitAll
     public List<Employee> findAll() {
     	log.info("Employee find all.");
     	List<Employee> employeesList = storage.getAll(); 
@@ -71,6 +74,7 @@ public class EmployeeController {
 
     @POST
     @Timed
+    @RolesAllowed(value = { "manager", "admin" })
     public Employee add(@Valid Employee employee) throws Exception {
     	log.info("Employee add: {}", employee); 
         Optional<Employee> retrieved = this.storage.add(employee);
@@ -85,6 +89,7 @@ public class EmployeeController {
     @Path("/{id}")
     @GET
     @Timed
+    @RolesAllowed(value = { "manager", "admin", "viewer" })
     public Employee findById(@PathParam("id") Long id) {
         log.info("Employee findById: id={}", id);
         Optional<Employee> retrieved = this.storage.findById(id);
@@ -99,6 +104,7 @@ public class EmployeeController {
     @Path("/department/{departmentId}")
     @GET
     @Timed
+    @RolesAllowed(value = { "manager", "admin", "viewer" })
     public Set<Employee> findByDepartment(@PathParam("departmentId") Long departmentId) {
         log.info("Employee findByDepartment: departmentId={}", departmentId);
         return repository.findByDepartment(departmentId);
@@ -107,6 +113,7 @@ public class EmployeeController {
     @Path("/organization/{organizationId}")
     @GET
     @Timed
+    @RolesAllowed(value = { "manager", "admin", "viewer" })
     public Set<Employee> findByOrganization(@PathParam("organizationId") Long organizationId) {
         log.info("Employee findByOrganization: organizationId={}", organizationId);
         return repository.findByOrganization(organizationId);
@@ -115,6 +122,7 @@ public class EmployeeController {
     @Path("/version")
     @GET
     @Timed
+    @PermitAll
     public String getVersion() {
     	log.info("Project version={}", this.version);
     	return this.version;
@@ -160,6 +168,7 @@ public class EmployeeController {
     @Timed
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
+    @PermitAll
     public Response list() {
     	
     	log.info("Employee list() with details.");
@@ -188,18 +197,19 @@ public class EmployeeController {
     @Timed
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
+    @RolesAllowed(value = { "manager" })
     public Response delete(Employee employee) {
-    	
+
     	log.info("Employee delete: {}", employee);
-    	
+
     	Optional<Employee> deleted = storage.delete(employee);
-    	
+
     	if(deleted.isPresent()) {
     		return Response.ok(deleted.get()).build();
     	} else {
     		return Response.status(Response.Status.NOT_FOUND).build();
     	}
-    	
+
     }
 
 }//end class

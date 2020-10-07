@@ -21,6 +21,8 @@ Inspect POM file, some dependencies are added.
 
 `mvnw quarkus:add-extension -Dextensions="smallrye-opentracing"`
 
+`mvn quarkus:add-extension -Dextensions="security-oauth2"`
+
 In a test environment we want to use an H2 database:
 
 `mvnw quarkus:add-extension -Dextensions="jdbc-h2"`
