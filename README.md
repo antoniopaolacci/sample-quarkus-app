@@ -200,7 +200,7 @@ First, we need to create a client with a given name. Let’s say this name is `q
 
 Then we may switch to the “`Credentials`” tab, and copy the client `Secret`. 
 
-Follow subsequent images to config Keycloak at: https://github.com/antoniopaolacci/sample-quarkus-app/blob/master/images/
+Follow subsequent images to config Keycloak at: https://github.com/antoniopaolacci/sample-quarkus-app/tree/master/images
 
 
 
