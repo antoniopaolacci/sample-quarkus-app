@@ -1,21 +1,34 @@
 # sample-quarkus-application
 
+
+
+---------------------------------------------------------------------------------------------------------------
+
 **Prerequisites**
 
 - using Apache **Maven >= 3.6.3**
 - using **Java version >= 1.8**  (`mvnw quarkus:dev` complains, _Using Java versions older than 11 to build Quarkus applications is deprecated and will be disallowed in a future release!_)
 - if use **eclipse** IDE, install **quarkus plugin** from marketplace 
 
+----------------------------------------------------------------------------------------------------------------
+
 **Quarkus** framework It allows us to automatically generate Kubernetes resources based on the defaults and user-provided configuration. It also provides an extension for building and pushing container images, then deploying the application to the target chosen platform: minikube, docker desktop kubernetes, digital ocean, Google Kubernetes Engine GKE, etc.
 
 **Quarkus** framework is designed for building Java applications in times of microservices and serverless architectures.  If you compare it with other popular frameworks like  Spring Boot / Spring Cloud (Netflix), the first difference is native support for running on Kubernetes or Openshift container orchestration platforms. BTW quarkus provides following benefits:
 
 - scaffold a project in a single command line
+
 - enable the *development mode* (hot reload)
+
 - example Dockerfile files for both _native_ and _jvm_ modes in `src/main/docker`. Instructions to build the image and run the container are written in those Dockerfiles.
+
 - automatically serves static resources located under the `src/main/resources/META-INF/resources` directory
+
 - an associated unit test 
+
 - and more
+
+  
 
 **Bootstrap** and **Scaffolding**
 
@@ -51,11 +64,13 @@ Test locally  (quarkus provide *junit5*, *REST-assured* and use *Hamcrest matche
 
 **Run**
 
-Run locally 
+Run locally  
 
 `mvnw compile quarkus:dev`
 
-`quarkus:dev` enables hot deployment with background compilation, which means that when you modify your Java files or your resource files and refresh  your browser these changes will automatically take effect.
+`quarkus:dev` enables *hot deployment* with background compilation, which means that when you modify your Java files or your resource files and refresh  your browser these changes will automatically take effect.
+
+Quarkus profiles are `dev` (when running `quarkus:dev` goal), `test` (when running tests) and `prod` (when not the others).
 
 **Consume**
 
@@ -71,10 +86,11 @@ if you access an incorrect address a *"404 NOT FOUND"* .html page display all th
 The same are repeatable for microservices projects: 
 
 - _department-service_ 
-
 - _organization-services_
 
 
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 **Kubernetes**
 
@@ -139,6 +155,8 @@ if you want to push on docker registry:
 
 
 
+----------------------------------------------------------------------------------------------------------------------------------------------------
+
 **OAuth2**
 
 > Quarkus OAuth2 support is based on the WildFly Elytron Security project. Using Quarkus OAuth2 extension to provide RBAC authorization based on integration with Keycloak. 
@@ -166,21 +184,23 @@ Quarkus OAuth2 provides a set of annotations for setting permissions. We can all
 
 
 
-Running KeyCloak on docker container
+Running KeyCloak on docker container:
 
 ```bash
-docker run -d --name keycloak -p 8888:8181 -e KEYCLOAK_USER=quarkus -e KEYCLOAK_PASSWORD=quarkus123 quay.io/keycloak/keycloak:11.0.2 -Djboss.http.port=8181
+docker network create keycloak-network
+
+docker run -d --name postgres --net keycloak-network -e POSTGRES_DB=keycloak -e POSTGRES_USER=keycloak -e POSTGRES_PASSWORD=password postgres
+
+docker run -d --name keycloak -p 8080:8080 -p 8443:8443 --net keycloak-network -e DB_USER=keycloak -e DB_PASSWORD=password -e DB_VENDOR=POSTGRES -e DB_ADDR=postgres -e DB_DATABASE=keycloak -e KEYCLOAK_USER=keycloak -e KEYCLOAK_PASSWORD=password -e PROXY_ADDRESS_FORWARDING=true jboss/keycloak
 ```
 
-Please note that we have bound Keycloak to a different port (8181) from the default one (8080) in case you are already using that port for other services.
+Go to the Keycloak Admin Console and login with the username and password you created earlier.
 
-Go to the [Keycloak Admin Console](http://localhost:8181/auth/admin) and login with the username and password you created earlier.
+First, we need to create a client with a given name. Let’s say this name is `quarkus`. The client credentials are used during the authorization process. It is important to choose `confidential` in the “`Access Type”` section and enable option “`Direct Access Grants`”.
 
-First, we need to create a client with a given name. Let’s say this name is `quarkus`. The client credentials are used during the authorization process. It is important to choose `confidential` in the “Access Type” section and enable option “Direct Access Grants”.
+Then we may switch to the “`Credentials`” tab, and copy the client `Secret`. 
 
-Then we may switch to the “Credentials” tab, and copy the client `Secret` .
-
-In the next steps, we will use two HTTP endpoints exposed by Keycloak. First of them, `token_endpoint` allows you to generate new access tokens. The second endpoint `introspection_endpoint` is used to retrieve the active state of a token. In other words, you can use it to validate access or refresh token.
+Follow subsequent images to config Keycloak at: https://github.com/antoniopaolacci/sample-quarkus-app/blob/master/images/
 
 
 
@@ -194,6 +214,51 @@ quarkus.oauth2.role-claim=roles
 ```
 
 
+
+Setting annotations on controller methods:
+
+```java
+    @PermitAll
+    public List<Employee> findAll() {   ... }
+    
+    @RolesAllowed(value = { "manager", "admin", "viewer" })
+    public Employee findById(@PathParam("id") Long id) {     ...   }
+    
+```
+
+
+
+Run some test to our backend microservice:
+
+```bash
+curl -X POST http://localhost:8080/auth/realms/master/protocol/openid-connect/token -d "grant_type=password" -d "client_id=quarkus" -d "client_secret=ec920554-11df-4524-87f1-46db53712371" -d "username=test_viewer" -d "password=123456"
+
+{
+	"access_token": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJxV1h3ZlJDNTJuQWN5QzJNVGJYeHNlT1ZtWndrRXV6Z0kxUnRqZXBubVFNIn0.eyJleHAiOjE2MDIwNjY1NTMsImlhdCI6MTYwMjA2NjI1MywianRpIjoiZDMwNDljNWItM2I0Ny00ZWQxLWI5MTQtYTE4ZTYwNTA1NmJiIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL2F1dGgvcmVhbG1zL21hc3RlciIsImF1ZCI6ImFjY291bnQiLCJzdWIiOiI5OGNmMDk3OS05MGViLTQwNTMtOGVmOC03NTFmNDJmNzEyN2IiLCJ0eXAiOiJCZWFyZXIiLCJhenAiOiJxdWFya3VzIiwic2Vzc2lvbl9zdGF0ZSI6IjViOGM4ZWFlLWUyYTUtNGMzZC05ZDA3LWM2ODVmYTI4M2RlMCIsImFjciI6IjEiLCJyZXNvdXJjZV9hY2Nlc3MiOnsiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJlbWFpbCBwcm9maWxlIiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJyb2xlcyI6WyJ2aWV3ZXIiLCJvZmZsaW5lX2FjY2VzcyIsInVtYV9hdXRob3JpemF0aW9uIl0sInByZWZlcnJlZF91c2VybmFtZSI6InRlc3Rfdmlld2VyIiwiZW1haWwiOiJ0ZXN0X3ZpZXdlckBleGFtcGxlLmNvbSJ9.bKPHxJGKwIwHSOWA0oS7P5a3_vYgznrc2losoz3quip3AxtTGvE0r1Nr5tm-OCnmEBR0eWxJBFOh-5AY_OfXI9HirpHtXYhojDSJ4QL_4Orf7LB3H2X4drWU5hpPYUg5CLiQHWqG0QUWyRzWIog_O0mdWXVKRdE3XEMYawprQ-dLdtV8W0SsfT9aD2NxbYHBQRHjylvVIArqI-DhI8i54-LGnYBsgtPmOJVtiSafw28XLlJF49lao7GG72E2x6pG09uZZK2nptnFwaBPuTLzsjBjv9l7LFVJuRaaBPt559_ylENuHaLSw4pve-dfx6EHsB33iED2MvhsFTrQk-Yx_A",
+	"expires_in": 300,
+	"refresh_expires_in": 1800,
+	"refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJjMDFlNGQyOC0wODIxLTQ3OWQtOTJlYi02MTZlZDNmZTQyZWQifQ.eyJleHAiOjE2MDIwNjgwNTMsImlhdCI6MTYwMjA2NjI1MywianRpIjoiNzdiNTliNjktZGU4Ny00NzEzLTg5NDYtMThhMmIxODhjZTcxIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL2F1dGgvcmVhbG1zL21hc3RlciIsImF1ZCI6Imh0dHA6Ly9sb2NhbGhvc3Q6ODA4MC9hdXRoL3JlYWxtcy9tYXN0ZXIiLCJzdWIiOiI5OGNmMDk3OS05MGViLTQwNTMtOGVmOC03NTFmNDJmNzEyN2IiLCJ0eXAiOiJSZWZyZXNoIiwiYXpwIjoicXVhcmt1cyIsInNlc3Npb25fc3RhdGUiOiI1YjhjOGVhZS1lMmE1LTRjM2QtOWQwNy1jNjg1ZmEyODNkZTAiLCJzY29wZSI6ImVtYWlsIHByb2ZpbGUifQ.5TaxcJfgXiuZGEcHSDv0TvJd49TML86cpY3Xa-MrakI",
+	"token_type": "bearer",
+	"not-before-policy": 0,
+	"session_state": "5b8c8eae-e2a5-4c3d-9d07-c685fa283de0",
+	"scope": "email profile"
+}
+
+curl -v http://localhost:8081/employees/1 -H "Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJxV1h3ZlJDNTJuQWN5QzJNVGJYeHNlT1ZtWndrRXV6Z0kxUnRqZXBubVFNIn0.eyJleHAiOjE2MDIwNjY1NTMsImlhdCI6MTYwMjA2NjI1MywianRpIjoiZDMwNDljNWItM2I0Ny00ZWQxLWI5MTQtYTE4ZTYwNTA1NmJiIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL2F1dGgvcmVhbG1zL21hc3RlciIsImF1ZCI6ImFjY291bnQiLCJzdWIiOiI5OGNmMDk3OS05MGViLTQwNTMtOGVmOC03NTFmNDJmNzEyN2IiLCJ0eXAiOiJCZWFyZXIiLCJhenAiOiJxdWFya3VzIiwic2Vzc2lvbl9zdGF0ZSI6IjViOGM4ZWFlLWUyYTUtNGMzZC05ZDA3LWM2ODVmYTI4M2RlMCIsImFjciI6IjEiLCJyZXNvdXJjZV9hY2Nlc3MiOnsiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJlbWFpbCBwcm9maWxlIiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJyb2xlcyI6WyJ2aWV3ZXIiLCJvZmZsaW5lX2FjY2VzcyIsInVtYV9hdXRob3JpemF0aW9uIl0sInByZWZlcnJlZF91c2VybmFtZSI6InRlc3Rfdmlld2VyIiwiZW1haWwiOiJ0ZXN0X3ZpZXdlckBleGFtcGxlLmNvbSJ9.bKPHxJGKwIwHSOWA0oS7P5a3_vYgznrc2losoz3quip3AxtTGvE0r1Nr5tm-OCnmEBR0eWxJBFOh-5AY_OfXI9HirpHtXYhojDSJ4QL_4Orf7LB3H2X4drWU5hpPYUg5CLiQHWqG0QUWyRzWIog_O0mdWXVKRdE3XEMYawprQ-dLdtV8W0SsfT9aD2NxbYHBQRHjylvVIArqI-DhI8i54-LGnYBsgtPmOJVtiSafw28XLlJF49lao7GG72E2x6pG09uZZK2nptnFwaBPuTLzsjBjv9l7LFVJuRaaBPt559_ylENuHaLSw4pve-dfx6EHsB33iED2MvhsFTrQk-Yx_A"
+
+
+ {
+    "id":1,
+    "name":"John Smith",
+    "age":30,"position":"Kubernetes Developer",
+    "organizationId":1,
+    "departmentId":1
+ }
+```
+
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 **References**
 
