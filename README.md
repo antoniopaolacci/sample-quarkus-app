@@ -94,18 +94,18 @@ The same are repeatable for microservices projects:
 
 **Kubernetes**
 
-Quarkus does not implement mechanisms for generating Kubernetes xml, deploying them on the platform, or building images. It adds  some logic to the existing tools. To enable extensions to Dekorate and  Jib we should include the following dependencies. 
+Quarkus does not implement mechanisms for generating Kubernetes xml, deploying them on the platform, or building images. It adds  some logic to the existing tools. 
+To enable extensions to Dekorate and Jib we should include the following dependencies. 
 
 Quarkus can use the external project *Dekorate* to generate an opinionated base Kubernetes resource.
 
 `./mvnw quarkus:add-extension -Dextensions="quarkus-kubernetes"`
 
-`./mvnw quarkus:add-extension -Dextensions="quarkus-container-image-jib"` or use an alternative extension 
+`./mvnw quarkus:add-extension -Dextensions="quarkus-container-image-jib"` or use an alternative extension `"quarkus-container-image-docker"`
 
-`"quarkus-container-image-docker"`(with this dependency quarkus use Docker binary and the generated Dockerfiles under `src/main/docker` in order to perform Docker builds)
+With the second dependency quarkus use Docker binary and the generated _Dockerfiles_ under `src/main/docker` in order to perform Docker Image build)
 
-When running the `./mvnw package` the Kubernetes resources are created in the t*arget/*
-*wiring-classes/META-INF/kubernetes/* directory.
+When running the `./mvnw package` the Kubernetes resources are created in the *target/wiring-classes/META-INF/kubernetes/* directory.
 
 ```xml
 POM.xml
@@ -121,26 +121,26 @@ POM.xml
    <artifactId>quarkus-container-image-docker</artifactId>
 </dependency>
 
-<!-- or in alternative use extension "quarkus-container-image-jib" and Quarkus use Jib to build docker image-->
+<!-- or in alternative use extension "quarkus-container-image-jib", so Quarkus use Jib to build docker image -->
+
 <!--
 <dependency>
    <groupId>io.quarkus</groupId>
    <artifactId>quarkus-container-image-jib</artifactId>
 </dependency> 
 -->
-
 ```
 
-*Jib* library builds optimized images for Java applications without a Docker daemon, and without deep mastery of Docker best-practices. 
+*Jib* library builds optimized images for Java applications without a Docker daemon and without deep mastery of Docker best-practices. (layering, create small images, fat jar to thin jar, reduce layer size, ...)
 
-*Dekorate* is a library that makes generating and decorating Kubernetes manifests**[*]** in a simpler manner.  It may generate *.yaml* file basing on the source code, annotations, and  configuration properties.
+*Dekorate* is a library that makes generating and decorating Kubernetes manifests *[-]* in a simpler manner.  It may generate *.yaml* file basing on the source code, annotations, and  configuration properties.
 
-**[*]** Kubernetes manifests files are used to create, modify and delete  Kubernetes resources such as pods, deployments, services or ingresses.  It is very common to define manifests in form of `.yaml` files and send them to the Kubernetes API Server via commands such as 
+*[]* Kubernetes manifests files are used to create, modify and delete Kubernetes resources such as pods, deployments, services or ingresses.  
+It is very common to define manifests in form of `.yml` files and send them to the Kubernetes API Server via command-cli `kubectl` such as 
 
 `kubectl apply -f my-manifest-k8s-file.yaml` 
 
 or `kubectl delete -f my-manifest-k8s-file.yaml`
-
 
 
 **Build Docker container and deploy on Kubernetes cluster**  
