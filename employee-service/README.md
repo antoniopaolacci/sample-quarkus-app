@@ -1,6 +1,6 @@
 # employee microservice
 
-_README.md_ explains how to:
+_README.md_  explains how to:
  - scaffold a project in a single command line  (bootstrapping quarkus project)
  - enable the development mode (hot reload)
  - import the project in your IDE (Eclipse)
